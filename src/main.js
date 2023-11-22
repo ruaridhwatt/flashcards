@@ -7,7 +7,7 @@ import router from './router';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 let vueApp = null;
-const auth = getAuth(firebaseApp);
+const auth = getAuth();
 export const user = ref(null);
 
 onAuthStateChanged(auth, (u) => {

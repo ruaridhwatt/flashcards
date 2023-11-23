@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import {Side} from "@/components/models/Side";
+import { Side } from '@/components/models/Side';
 
 const props = defineProps({
   front: {

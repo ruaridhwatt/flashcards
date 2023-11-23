@@ -4,18 +4,25 @@ import './assets/style.css';
 import { createApp, ref } from 'vue';
 import App from './App.vue';
 import router from './router';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, connectAuthEmulator, onAuthStateChanged } from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
 
 let vueApp = null;
-const auth = getAuth();
 export const user = ref(null);
 
-onAuthStateChanged(auth, (u) => {
-  user.value = u;
-
-  if (!vueApp) {
-    vueApp = createApp(App);
-    vueApp.use(router);
-    vueApp.mount('body');
+fetch('/__/firebase/init.json').then(async (response) => {
+  const firebaseApp = initializeApp(await response.json());
+  const auth = getAuth(firebaseApp);
+  if (import.meta.env.DEV) {
+    connectAuthEmulator(auth, 'http://localhost:9099');
   }
+  onAuthStateChanged(auth, (u) => {
+    user.value = u;
+
+    if (!vueApp) {
+      vueApp = createApp(App);
+      vueApp.use(router);
+      vueApp.mount('body');
+    }
+  });
 });
